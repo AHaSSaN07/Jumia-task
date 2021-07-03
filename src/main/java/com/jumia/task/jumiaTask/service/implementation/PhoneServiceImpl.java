@@ -38,27 +38,22 @@ public class PhoneServiceImpl implements PhoneService {
 //    }
 
     @Override
-    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter) {
+    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter, Optional<String> countryFilter) {
         List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
         List<PhoneDto> response = new ArrayList<>();
         for (String number : phoneNumbers) {
             Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
-            String country = getCountryName(getCountryCode(number));
+            String code = getCountryCode(number);
+            String country = getCountryName(code);
 
-            PhoneDto phoneDto = new PhoneDto();
-            phoneDto.setStatus(isValid);
-            phoneDto.setPhone(number);
-            phoneDto.setCountry(country);
+            PhoneDto phoneDto = populateDto(number, code, isValid, country);
 
             response.add(phoneDto);
         }
 
-        //checks if there's a flag to group response by phone status
-        //if there is, converting response object to a stream and filter it using a predicate to check the status then converted back to filtered list.
-        if(validFilter.isEmpty())
-            return response;
-        response = validFilter.orElse(true)? response.stream().filter(phoneDto -> phoneDto.getStatus()).collect(Collectors.toList())
-                : response.stream().filter(phoneDto -> !phoneDto.getStatus()).collect(Collectors.toList());
+        response = applyCountryFilter(countryFilter, response);
+        response = applyValidFilter(validFilter, response);
+
         return response;
     }
 
@@ -71,6 +66,37 @@ public class PhoneServiceImpl implements PhoneService {
     private String getCountryName(String code) {
         String name = environment.getProperty(code + "_name");
         return name.isEmpty() ? null : name;
+    }
+
+    private PhoneDto populateDto(String number, String code, Boolean validity, String country) {
+        PhoneDto phoneDto = new PhoneDto();
+        phoneDto.setValidityStatus(validity);
+        phoneDto.setPhone(number);
+        phoneDto.setCountryCode(code);
+        phoneDto.setCountry(country);
+        return phoneDto;
+    }
+
+    //checks if there's a flag to group response by phone status
+    //if there is, converting response object to a stream and filter it using a predicate to check the status then converted back to filtered list.
+    private List<PhoneDto> applyValidFilter(Optional<Boolean> validFilter, List<PhoneDto> unfilteredResponse) {
+        if (validFilter.isEmpty())
+            return unfilteredResponse;
+        return validFilter.orElse(true) ? unfilteredResponse.stream()
+                .filter(phoneDto -> phoneDto.getValidityStatus())
+                .collect(Collectors.toList())
+                : unfilteredResponse.stream()
+                .filter(phoneDto -> !phoneDto.getValidityStatus())
+                .collect(Collectors.toList());
+    }
+
+    private List<PhoneDto> applyCountryFilter(Optional<String> countryFilter, List<PhoneDto> unfilteredResponse) {
+        if (countryFilter.isEmpty())
+            return unfilteredResponse;
+        String countryName = countryFilter.get();
+        return unfilteredResponse.stream()
+                .filter(phoneDto -> phoneDto.getCountry().equals(countryName))
+                .collect(Collectors.toList());
     }
 
 }

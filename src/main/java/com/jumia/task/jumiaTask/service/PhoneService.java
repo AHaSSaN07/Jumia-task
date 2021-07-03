@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface PhoneService {
     //public List<String> getAllValidPhoneNumbers();
 
-    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter);
+    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter,Optional<String> countryFilter);
 
 }

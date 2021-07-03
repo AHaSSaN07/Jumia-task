@@ -9,14 +9,23 @@ public class PhoneDto {
 
     private String phone;
     private String country;
-    private Boolean status;
+    private String countryCode;
+    private Boolean validityStatus;
 
-    public Boolean getStatus() {
-        return status;
+    public String getCountryCode() {
+        return countryCode;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public Boolean getValidityStatus() {
+        return validityStatus;
+    }
+
+    public void setValidityStatus(Boolean status) {
+        this.validityStatus = status;
     }
 
     public String getPhone() {

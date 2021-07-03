@@ -17,19 +17,21 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-    @RequestMapping("/api/phone")
+@RequestMapping("/api/phone")
 public class PhoneController {
 
     PhoneService phoneService;
-    PhoneController(PhoneService phoneService){
+
+    PhoneController(PhoneService phoneService) {
         this.phoneService = phoneService;
     }
 
 
     @GetMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity getListOfPhonesWithCorrespondingCountries(@RequestParam(name = "valid",required=false) Optional<Boolean> validFilter){
-         List<PhoneDto> response = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(validFilter);
+    public ResponseEntity getListOfPhonesWithCorrespondingCountries(@RequestParam(name = "valid", required = false) Optional<Boolean> validFilter
+            , @RequestParam(name = "country", required = false) Optional<String> countryFilter) {
+        List<PhoneDto> response = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(validFilter,countryFilter);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 }
