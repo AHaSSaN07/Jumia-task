@@ -5,15 +5,10 @@ import com.jumia.task.jumiaTask.repo.CustomerRepository;
 import com.jumia.task.jumiaTask.service.PhoneService;
 import com.jumia.task.jumiaTask.utils.PhoneValidityChecker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -32,26 +27,23 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-    @Override
-    public List<String> getAllValidPhoneNumbers() {
-
-        //fetches all phone numbers stored in db, converts to a stream then filters by phone validator as a predicate.
-        List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
-        phoneNumbers.forEach(System.out::println);
-        return phoneNumbers.stream()
-                .filter(num -> this.phoneValidityChecker.ValidatePhoneNumber(num))
-                .collect(Collectors.toList());
-    }
-
-
+//    @Override
+//    public List<String> getAllValidPhoneNumbers() {
+//        //fetches all phone numbers stored in db, converts to a stream then filters by phone validator as a predicate.
+//        List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
+//        phoneNumbers.forEach(System.out::println);
+//        return phoneNumbers.stream()
+//                .filter(num -> this.phoneValidityChecker.ValidatePhoneNumber(num))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
-    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries() {
+    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter) {
         List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
         List<PhoneDto> response = new ArrayList<>();
-        for(String number : phoneNumbers){
+        for (String number : phoneNumbers) {
             Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
-            String country =getCountryName(getCountryCode(number));
+            String country = getCountryName(getCountryCode(number));
 
             PhoneDto phoneDto = new PhoneDto();
             phoneDto.setStatus(isValid);
@@ -60,17 +52,25 @@ public class PhoneServiceImpl implements PhoneService {
 
             response.add(phoneDto);
         }
+
+        //checks if there's a flag to group response by phone status
+        //if there is, converting response object to a stream and filter it using a predicate to check the status then converted back to filtered list.
+        if(validFilter.isEmpty())
+            return response;
+        response = validFilter.orElse(true)? response.stream().filter(phoneDto -> phoneDto.getStatus()).collect(Collectors.toList())
+                : response.stream().filter(phoneDto -> !phoneDto.getStatus()).collect(Collectors.toList());
         return response;
     }
 
     //these to throw exceptions and to be caught in exception handling.
-    private String getCountryCode(String number){
-        String code =  number.substring(1, number.indexOf(')'));
-        return code.isEmpty()?null:code;
+    private String getCountryCode(String number) {
+        String code = number.substring(1, number.indexOf(')'));
+        return code.isEmpty() ? null : code;
     }
-    private String getCountryName(String code){
-        String name =environment.getProperty(code+ "_name");
-        return name.isEmpty()?null:name;
+
+    private String getCountryName(String code) {
+        String name = environment.getProperty(code + "_name");
+        return name.isEmpty() ? null : name;
     }
 
 }

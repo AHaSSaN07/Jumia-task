@@ -5,10 +5,11 @@ import com.jumia.task.jumiaTask.entity.Customer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface PhoneService {
-    public List<String> getAllValidPhoneNumbers();
+    //public List<String> getAllValidPhoneNumbers();
 
-    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries();
+    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter);
 
 }
