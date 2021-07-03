@@ -27,27 +27,17 @@ public class PhoneServiceImpl implements PhoneService {
     }
 
 
-//    @Override
-//    public List<String> getAllValidPhoneNumbers() {
-//        //fetches all phone numbers stored in db, converts to a stream then filters by phone validator as a predicate.
-//        List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
-//        phoneNumbers.forEach(System.out::println);
-//        return phoneNumbers.stream()
-//                .filter(num -> this.phoneValidityChecker.ValidatePhoneNumber(num))
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter, Optional<String> countryFilter) {
         List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
         List<PhoneDto> response = new ArrayList<>();
+
         for (String number : phoneNumbers) {
             Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
             String code = getCountryCode(number);
             String country = getCountryName(code);
 
             PhoneDto phoneDto = populateDto(number, code, isValid, country);
-
             response.add(phoneDto);
         }
 
@@ -71,7 +61,7 @@ public class PhoneServiceImpl implements PhoneService {
     private PhoneDto populateDto(String number, String code, Boolean validity, String country) {
         PhoneDto phoneDto = new PhoneDto();
         phoneDto.setValidityStatus(validity);
-        phoneDto.setPhone(number);
+        phoneDto.setPhone(number.split(" ")[1]);
         phoneDto.setCountryCode(code);
         phoneDto.setCountry(country);
         return phoneDto;
