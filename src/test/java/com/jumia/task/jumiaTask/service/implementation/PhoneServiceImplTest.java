@@ -24,21 +24,27 @@ class PhoneServiceImplTest {
     PhoneValidityChecker phoneValidityChecker = new PhoneValidityChecker(environment);
     PhoneService phoneService = new PhoneServiceImpl(customerRepository, phoneValidityChecker, environment);
 
+    //mock tests  to check the business logic
     @Test
-    void getAllPhoneNumbersWithStatusAndCountries() {
+    void getAllPhoneNumbersWithStatusAndCountriesTest() {
         List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(Optional.empty(), Optional.empty());
         Assert.assertEquals(11, list.size());
     }
 
     @Test
-    void getAllPhoneNumbersWithStatusAndCountriesWithValidFilter() {
+    void getAllPhoneNumbersWithStatusAndCountriesWithValidFilterTest() {
         List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(Optional.of(true), Optional.empty());
         Assert.assertEquals(6, list.size());
     }
 
     @Test
-    void getAllPhoneNumbersWithStatusAndCountriesWithCountryFilter() {
+    void getAllPhoneNumbersWithStatusAndCountriesWithCountryFilterTest() {
         List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(Optional.empty(), Optional.of("Morocco"));
         Assert.assertEquals(4, list.size());
+    }
+    @Test
+    void getAllPhoneNumbersWithStatusAndCountriesWithCountryAndStatysFiltersTest() {
+        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(Optional.of(true), Optional.of("Morocco"));
+        Assert.assertEquals(1, list.size());
     }
 }
