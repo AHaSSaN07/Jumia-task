@@ -17,7 +17,4 @@ public class JumiaTaskApplication {
 		SpringApplication.run(JumiaTaskApplication.class, args);
 	}
 
-	@Autowired
-	Environment env;
-
 }

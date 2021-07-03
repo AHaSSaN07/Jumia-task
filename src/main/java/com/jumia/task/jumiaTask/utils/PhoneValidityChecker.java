@@ -12,9 +12,10 @@ public class PhoneValidityChecker {
     Environment environment;
 
     @Autowired
-    PhoneValidityChecker(Environment env) {
+    public PhoneValidityChecker(Environment env) {
         this.environment = env;
     }
+
 
     public Boolean ValidatePhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isEmpty())
