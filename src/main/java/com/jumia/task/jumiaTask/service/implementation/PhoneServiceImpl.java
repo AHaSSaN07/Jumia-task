@@ -30,21 +30,23 @@ public class PhoneServiceImpl implements PhoneService {
     @Override
     public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter, Optional<String> countryFilter) {
         List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
-        List<PhoneDto> response = new ArrayList<>();
-
-        for (String number : phoneNumbers) {
-            Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
-            String code = getCountryCode(number);
-            String country = getCountryName(code);
-
-            PhoneDto phoneDto = populateDto(number, code, isValid, country);
-            response.add(phoneDto);
-        }
-
+        List<PhoneDto> response = getListOfPhoneDtosBeforeFilters(phoneNumbers);
         response = applyCountryFilter(countryFilter, response);
         response = applyValidFilter(validFilter, response);
 
         return response;
+    }
+
+    private List<PhoneDto> getListOfPhoneDtosBeforeFilters(List<String> phoneNumbers){
+        List<PhoneDto> dtos = new ArrayList<>();
+        for (String number : phoneNumbers) {
+            Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
+            String code = getCountryCode(number);
+            String country = getCountryName(code);
+            PhoneDto phoneDto = populateDto(number, code, isValid, country);
+            dtos.add(phoneDto);
+        }
+        return  dtos;
     }
 
     //these to throw exceptions and to be caught in exception handling.
