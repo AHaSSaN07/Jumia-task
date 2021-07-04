@@ -25,10 +25,6 @@ public class DummyCustomerRepo implements CustomerRepository {
         return list;
     }
 
-    @Override
-    public List<String> getPhoneNumbersByRequestedPage(Integer count) {
-        return null;
-    }
 
     @Override
     public <S extends Customer> S save(S entity) {

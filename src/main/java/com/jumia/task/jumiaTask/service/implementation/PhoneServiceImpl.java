@@ -31,6 +31,7 @@ public class PhoneServiceImpl implements PhoneService {
     public List<PhoneDto> getAllPhoneNumbersWithRequestedFilters(Optional<Boolean> validFilter, Optional<String> countryFilter) {
         List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
         List<PhoneDto> response = getListOfPhoneDtosBeforeFilters(phoneNumbers);
+
         response = applyCountryFilter(countryFilter, response);
         response = applyValidFilter(validFilter, response);
 

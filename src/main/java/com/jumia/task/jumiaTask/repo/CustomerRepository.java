@@ -13,6 +13,4 @@ public interface CustomerRepository extends CrudRepository<Customer,Long> {
     @Query(value = "SELECT phone  FROM customer c",nativeQuery = true)
     public List<String> getAllPhoneNumbers();
 
-    @Query(value = "SELECT phone  FROM customer c LIMIT ?1",nativeQuery = true)
-    public List<String> getPhoneNumbersByRequestedPage(Integer count);
 }
