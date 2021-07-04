@@ -27,24 +27,24 @@ class PhoneServiceImplTest {
     //mock tests  to check the business logic
     @Test
     void getAllPhoneNumbersWithStatusAndCountriesTest() {
-        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.empty(), Optional.empty(),Optional.empty(), Optional.empty());
+        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.empty(), Optional.empty());
         Assert.assertEquals(11, list.size());
     }
 
     @Test
     void getAllPhoneNumbersWithStatusAndCountriesWithValidFilterTest() {
-        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.of(true), Optional.empty(),Optional.empty(), Optional.empty());
+        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.of(true), Optional.empty());
         Assert.assertEquals(6, list.size());
     }
 
     @Test
     void getAllPhoneNumbersWithStatusAndCountriesWithCountryFilterTest() {
-        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.empty(), Optional.of("Morocco"),Optional.empty(), Optional.empty());
+        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.empty(), Optional.of("Morocco"));
         Assert.assertEquals(4, list.size());
     }
     @Test
     void getAllPhoneNumbersWithStatusAndCountriesWithCountryAndStatysFiltersTest() {
-        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.of(true), Optional.of("Morocco"),Optional.empty(), Optional.empty());
+        List<PhoneDto> list = this.phoneService.getAllPhoneNumbersWithRequestedFilters(Optional.of(true), Optional.of("Morocco"));
         Assert.assertEquals(1, list.size());
     }
 }
