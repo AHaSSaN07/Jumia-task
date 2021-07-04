@@ -28,8 +28,9 @@ public class PhoneServiceImpl implements PhoneService {
 
 
     @Override
-    public List<PhoneDto> getAllPhoneNumbersWithStatusAndCountries(Optional<Boolean> validFilter, Optional<String> countryFilter) {
-        List<String> phoneNumbers = this.customerRepository.getAllPhoneNumbers();
+    public List<PhoneDto> getAllPhoneNumbersWithRequestedFilters(Optional<Boolean> validFilter, Optional<String> countryFilter, Optional<Integer> pages
+            , Optional<Integer> pageSize) {
+        List<String> phoneNumbers = getPhoneNumbersByRequestedPage(pages,pageSize);
         List<PhoneDto> response = getListOfPhoneDtosBeforeFilters(phoneNumbers);
         response = applyCountryFilter(countryFilter, response);
         response = applyValidFilter(validFilter, response);
@@ -37,7 +38,15 @@ public class PhoneServiceImpl implements PhoneService {
         return response;
     }
 
-    private List<PhoneDto> getListOfPhoneDtosBeforeFilters(List<String> phoneNumbers){
+    private List<String> getPhoneNumbersByRequestedPage(Optional<Integer> pages, Optional<Integer> pageSize) {
+        if (pages.isEmpty() || pageSize.isEmpty())
+            return this.customerRepository.getAllPhoneNumbers();
+        Integer numberOfPhonesRequested = pages.get() * pageSize.get();
+        return this.customerRepository.getPhoneNumbersByRequestedPage(numberOfPhonesRequested);
+
+    }
+
+    private List<PhoneDto> getListOfPhoneDtosBeforeFilters(List<String> phoneNumbers) {
         List<PhoneDto> dtos = new ArrayList<>();
         for (String number : phoneNumbers) {
             Boolean isValid = this.phoneValidityChecker.ValidatePhoneNumber(number);
@@ -46,7 +55,7 @@ public class PhoneServiceImpl implements PhoneService {
             PhoneDto phoneDto = populateDto(number, code, isValid, country);
             dtos.add(phoneDto);
         }
-        return  dtos;
+        return dtos;
     }
 
     //these to throw exceptions and to be caught in exception handling.

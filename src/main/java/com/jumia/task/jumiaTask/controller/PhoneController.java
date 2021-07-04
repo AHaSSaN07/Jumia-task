@@ -29,8 +29,11 @@ public class PhoneController {
     @GetMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity getListOfPhonesWithCorrespondingCountries(@RequestParam(name = "valid", required = false) Optional<Boolean> validFilter
-            , @RequestParam(name = "country", required = false) Optional<String> countryFilter) {
-        List<PhoneDto> response = this.phoneService.getAllPhoneNumbersWithStatusAndCountries(validFilter,countryFilter);
+            , @RequestParam(name = "country", required = false) Optional<String> countryFilter
+            , @RequestParam(name = "pages", required = false) Optional<Integer> pages
+            , @RequestParam(name = "pageSize", required = false) Optional<Integer> pageSize
+    ) {
+        List<PhoneDto> response = this.phoneService.getAllPhoneNumbersWithRequestedFilters(validFilter, countryFilter,pages,pageSize);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 }
