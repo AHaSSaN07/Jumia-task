@@ -1,4 +1,5 @@
 package com.jumia.task.jumiaTask.utils;
+import com.jumia.task.jumiaTask.exceptions.PropNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -28,8 +29,7 @@ public class PhoneValidityChecker {
 
 
         String correspondingRegex = environment.getProperty(countryCode);
-        if (correspondingRegex.isEmpty() || correspondingRegex == null)
-            return false;
+        if (correspondingRegex == null)throw new PropNotFound(countryCode);
 
 
         Pattern pattern = Pattern.compile(correspondingRegex);

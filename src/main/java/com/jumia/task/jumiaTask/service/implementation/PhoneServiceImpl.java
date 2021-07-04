@@ -1,6 +1,7 @@
 package com.jumia.task.jumiaTask.service.implementation;
 
 import com.jumia.task.jumiaTask.dto.PhoneDto;
+import com.jumia.task.jumiaTask.exceptions.PropNotFound;
 import com.jumia.task.jumiaTask.repo.CustomerRepository;
 import com.jumia.task.jumiaTask.service.PhoneService;
 import com.jumia.task.jumiaTask.utils.PhoneValidityChecker;
@@ -59,7 +60,8 @@ public class PhoneServiceImpl implements PhoneService {
 
     private String getCountryName(String code) {
         String name = environment.getProperty(code + "_name");
-        return name.isEmpty() ? null : name;
+        if(name == null)throw new PropNotFound(code);
+        return name;
     }
 
     private PhoneDto populateDto(String number, String code, Boolean validity, String country) {
@@ -84,6 +86,7 @@ public class PhoneServiceImpl implements PhoneService {
                 .collect(Collectors.toList());
     }
 
+    //filters response object by a predicate that check the countryName equality.
     private List<PhoneDto> applyCountryFilter(Optional<String> countryFilter, List<PhoneDto> unfilteredResponse) {
         if (countryFilter.isEmpty())
             return unfilteredResponse;
