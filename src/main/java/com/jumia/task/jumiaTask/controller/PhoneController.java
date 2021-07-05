@@ -26,8 +26,9 @@ public class PhoneController {
         this.phoneService = phoneService;
     }
 
-    @GetMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+//    @GetMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+//            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping
     public ResponseEntity getListOfPhonesWithCorrespondingCountries(@RequestParam(name = "valid", required = false) Optional<Boolean> validFilter
             , @RequestParam(name = "country", required = false) Optional<String> countryFilter
     ) {

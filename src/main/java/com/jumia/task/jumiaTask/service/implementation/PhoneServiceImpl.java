@@ -34,7 +34,7 @@ public class PhoneServiceImpl implements PhoneService {
         List<PhoneDto> response = getListOfPhoneDtosBeforeFilters(phoneNumbers);
 
         response = applyCountryFilter(countryFilter, response);
-        response = applyValidFilter(validFilter, response);
+        response = applyValidityFilter(validFilter, response);
 
         return response;
     }
@@ -75,7 +75,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     //checks if there's a flag to group response by phone status
     //if there is, converting response object to a stream and filter it using a predicate to check the status then converted back to filtered list.
-    private List<PhoneDto> applyValidFilter(Optional<Boolean> validFilter, List<PhoneDto> unfilteredResponse) {
+    private List<PhoneDto> applyValidityFilter(Optional<Boolean> validFilter, List<PhoneDto> unfilteredResponse) {
         if (validFilter.isEmpty())
             return unfilteredResponse;
         return validFilter.orElse(true) ? unfilteredResponse.stream()
