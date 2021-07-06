@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 //http://localhost:8080/api/phone
-async function (callPhoneService url) {
+async function callPhoneService (url) {
   const axios = require('axios').default;
   const response = await axios.get(url)
   console.log(response)
