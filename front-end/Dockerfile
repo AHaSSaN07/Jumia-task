@@ -7,4 +7,4 @@ RUN npm install
 COPY . /app
 RUN npm run build
 
-ENTRYPOINT ["npm","start"]docker run -p 8080:8080 jumia_task
+ENTRYPOINT ["npm","start"]
