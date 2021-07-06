@@ -88,7 +88,7 @@ public class PhoneServiceImpl implements PhoneService {
 
     //filters response object by a predicate that check the countryName equality.
     private List<PhoneDto> applyCountryFilter(Optional<String> countryFilter, List<PhoneDto> unfilteredResponse) {
-        if (countryFilter.isEmpty())
+        if (countryFilter.isEmpty() || countryFilter.get() =="")
             return unfilteredResponse;
         String countryName = countryFilter.get();
         return unfilteredResponse.stream()

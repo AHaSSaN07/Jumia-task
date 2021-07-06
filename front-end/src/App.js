@@ -5,7 +5,7 @@ import axios from 'axios';
 
 
 //http://localhost:8080/api/phone
-async function axiosTest( url) {
+async function (callPhoneService url) {
   const axios = require('axios').default;
   const response = await axios.get(url)
   console.log(response)
@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     (async function callApi(){
       const url = "http://localhost:8080/api/phone"
-      setPhoneData(await axiosTest(url));
+      setPhoneData(await callPhoneService(url));
     })();
   }, []);
 
@@ -42,7 +42,7 @@ function App() {
   const handleSubmit = async() => {
     const url  = `http://localhost:8080/api/phone?country=${country}&valid=${validity}` ; 
     console.log(url)
-    setPhoneData(await axiosTest(url));
+    setPhoneData(await callPhoneService(url));
   }
   return (
     <div >
